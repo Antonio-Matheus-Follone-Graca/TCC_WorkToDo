@@ -8,7 +8,7 @@
 {% load widget_tweaks %}
 {% include 'form_pesquisar_tarefa.html' %}
     {% include 'partials/menu.html' %}
-   <h3> formulario de tarefa </h3>
+   <h3>Tarefa</h3>
     <section class="col-8"> 
     <form action="{% url 'insert_tarefa' %}" method="POST">
         {% csrf_token %}
@@ -56,7 +56,7 @@
        
 
         {% include 'partials/alertas.html' %}
-        <input type="submit" value="criar tarefa" class="btn btn-success mt-2">
+        <input type="submit" value="Salvar" class="btn btn-success mt-2">
     </form>
    
 </section>

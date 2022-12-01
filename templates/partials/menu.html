@@ -12,9 +12,8 @@
           </a>
         
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item" href="{% url 'form_anotacoes' %}">Criar anotação  </a>
-            <a class="dropdown-item" href="{% url 'dashboard' %}"> Anotações  </a> 
-            
+            <a class="dropdown-item" href="{% url 'dashboard' %}">Anotações</a> 
+            <a class="dropdown-item" href="{% url 'form_anotacoes' %}">Criar anotação</a>
           </div>
         </div>
         <div class="dropdown show">
@@ -23,9 +22,8 @@
           </a>
         
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item" href="{% url 'form_criar_grupo' %}">Criar grupos </a>
-            <a class="dropdown-item" href="{% url 'listar_grupos' %}">Grupos </a>
-            
+            <a class="dropdown-item" href="{% url 'listar_grupos' %}">Grupos</a>
+            <a class="dropdown-item" href="{% url 'form_criar_grupo' %}">Criar grupos</a>  
           </div>
         </div>
 
@@ -35,53 +33,23 @@
           </a>
         
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item" href="{% url 'form_tarefas' %}">Criar tarefas </a>
             <a class="dropdown-item" href="{% url 'listar_tarefas' %}">Tarefas </a>
-           
+            <a class="dropdown-item" href="{% url 'form_tarefas' %}">Criar tarefas </a>           
           </div>
         </div>
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    
-      
-    
-    
-
-    
- 
         <div class="dropdown show">
           <a class="navbar-brand dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Configurações 
           </a>
         
           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-            <a class="dropdown-item" href="{% url 'pagina_deletar_usuario'  %}"> Deletar conta  </a> 
-            <a class="dropdown-item" href="{% url 'pagina_alterar_usuario' %}">alterar dados </a>
-            <a class="dropdown-item" href="{% url 'pagina_alterar_senha' %}">alterar senha </a>
+            <a class="dropdown-item" href="{% url 'pagina_alterar_usuario' %}">Alterar dados</a>
+            <a class="dropdown-item" href="{% url 'pagina_alterar_senha' %}">Alterar senha</a>
+            <a class="dropdown-item" href="{% url 'pagina_deletar_usuario'  %}">Deletar conta</a> 
            
           </div>
         </div>
-        
-        
-        
-        
-        
-        
-        
-        
 
         <a class="navbar-brand" href="{% url 'logout' %}"> Sair  </a> 
         
