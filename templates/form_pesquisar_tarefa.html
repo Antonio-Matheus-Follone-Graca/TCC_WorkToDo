@@ -1,0 +1,17 @@
+<form action="{% url 'buscar_tarefa'%}" method="GET">
+  {% csrf_token %}
+    <div class="form-group mt-3">
+      <div class="input-group">
+        <input name="pesquisar_tarefa" type="text" class="form-control"  placeholder="pesquisar tarefa" required>
+        <span class="input-group-btn">
+        <button type="submit" class="btn btn-primary ml-2">
+         <i class="fa fa-search"> </i>
+        </button>
+        </span>
+      </div>
+    </div>
+  </form>
+  
+  
+  
+  

@@ -1,0 +1,42 @@
+{% extends 'partials/base.html' %}
+{% block title %} pesquisa grupo  {% endblock %}
+
+{% block content%}
+{% include 'form_pesquisar_grupo.html' %}
+    {% include 'partials/menu.html' %}
+    {% if resultado_pesquisa_grupo %}
+    <table class="table">
+        <thead>
+            <tr>
+              <th scope="col">id grupo </th>
+              <th scope="col">Titulo</th>
+              <th scope="col">descrição </th>
+              <th scope="col">cor </th>
+              <th scope="col">fk_pessoa_id</th>
+              <th scope="col">apagar </th>
+              <th scope="col">Editar </th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for resultado_grupo in resultado_pesquisa_grupo %}
+                <tr>
+                    <td> {{resultado_grupo.id}} </td>
+                    <td> {{resultado_grupo.title}} </td>
+                    <td> {{resultado_grupo.description}} </td>
+                    <td> <input type="color"  value="{{resultado_grupo.color}}" readonly> </td>
+                    <td> {{resultado_grupo.fk_pessoa_id}} </td>
+                    <td> <a href="{% url 'pagina_deletar_grupo' resultado_grupo.id %}" title="{{resultado_grupo.id}}"> Apagar  </a> </td>
+                    <td> <a href="{% url 'pagina_editar_grupo' resultado_grupo.id %}" title="{{resultado_grupo.id}}"> Editar  </a> </td>
+                </tr>
+            {% endfor %}
+          </tbody>
+    </table>
+
+    {% else %}
+    <div class="container"> 
+        <p> grupo não encontrado </p>
+    </div>
+    {% endif %}
+
+
+{% endblock %}

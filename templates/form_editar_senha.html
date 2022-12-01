@@ -1,0 +1,36 @@
+{% extends 'partials/base.html' %}
+
+{% block title %} Atualizar senha  {% endblock %}
+
+{% block content %}
+{% load widget_tweaks %}
+
+{% include 'partials/menu.html' %}
+
+<h1> Atualizar senha </h1>
+<p>
+    para atualizar sua senha, digite a senha nova e digite sua senha atual.
+    <br> Ao atualizar sua senha com sucesso, você terá que logar denovo na conta.
+</p>
+<section class="col-8">
+    <form action="{% url 'atualizar_senha' %}" method="POST">
+      {% csrf_token %}
+      {% for field in form_senha.visible_fields %}
+        <div class='form-group'>
+            <label for="{{field.id_for_label}}"> {{field.label}} </label>
+           
+            {{field|add_class:'form-control'}}
+        </div>
+            {%  for error in field.errors %}
+                <section class="alert alert-danger mt-2" role="alert">
+                {{ field.errors }}
+                </section>
+            {% endfor %}
+        {% endfor %}
+    
+        {% include 'partials/alertas.html' %}
+        <input type="submit" value="atualizar senha" class="btn btn-success mt-2">
+    </form>
+</section>
+
+{% endblock %}

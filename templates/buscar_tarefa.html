@@ -1,0 +1,93 @@
+{%  extends 'partials/base.html' %}
+{% block title %} resultado da pesquisa  {% endblock %}
+
+{% block content %}
+{% include 'form_pesquisar_tarefa.html' %} 
+{% include 'partials/menu.html' %}
+<h3 class="mb-5 mt-1"> Resultados da tarefa </h3>
+{% if resultado_tarefa_pesquisa %}
+<table class="table">
+    <thead>
+        <tr>
+          <th scope="col">id tarefa </th>
+          <th scope="col">titulo da tarefa  </th>
+          <th scope="col"> corpo </th>
+          <th scope="col">data de inicio  </th>
+          <th scope="col">data máxima para concluir  </th>
+          <th scope="col">criado em   </th>
+          <th scope="col">Data que a tarefa foi concluída   </th>
+          <th scope="col">status  </th>
+          <th scope="col">grupo  </th>
+          <th scope="col">Apagar   </th>
+          <th scope="col">editar  </th>
+          <th scope="col">Concluir tarefa  </th>
+       
+       
+        
+        
+         
+         
+          
+        </tr>
+      </thead>
+      <tbody>
+        {% for resultado_tarefa in resultado_tarefa_pesquisa %}
+        <tr>
+            <td> {{resultado_tarefa.id}} </td>
+            <td> {{resultado_tarefa.title}} </td>
+            <td> {{resultado_tarefa.body}} </td>
+            <td> {{resultado_tarefa.date_start}} </td>
+            <td> {{resultado_tarefa.date_completion}} </td>
+            <td> {{resultado_tarefa.date}} </td>
+            <td> 
+              {% if resultado_tarefa.date_conclusao == None %}
+                -
+              {% else %}
+                {{resultado_tarefa.date_conclusao}}  
+              
+                {% endif %}
+            </td>
+            <td> {{resultado_tarefa.status}} </td>
+            <td>
+                {% if resultado_tarefa.fk_grupo == None%}
+                -
+               {% else %}
+                 {{resultado_tarefa.fk_grupo.title}}
+               {% endif %}  
+            </td>
+            <td> <a href="{% url 'deletar_tarefa' resultado_tarefa.id %}" title="{{resultado_tarefa.id}}"> Apagar  </a> </td>
+            <td> <a href="{% url 'editar_tarefa' resultado_tarefa.id %}" title="{{resultado_tarefa.id}}"> Editar  </a> </td>
+            <td> <a href="{% url 'concluir_tarefa' resultado_tarefa.id %}" title="concluir tarefa"> Concluir tarefa  </a> </td>
+        </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<div class="container"> 
+    <p> tarefa não encontrada</p>
+</div>
+{% endif %}
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

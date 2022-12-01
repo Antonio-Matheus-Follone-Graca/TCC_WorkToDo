@@ -1,0 +1,56 @@
+{%  extends 'partials/base.html' %}
+{% block title %} Dashboard  {% endblock %}
+
+{% block content %}
+    {% include 'form_pesquisar_anotacao.html' %}                                          
+    {% include 'partials/menu.html' %}
+    <h1> bem vindo nick: {{user.username}}</h1>
+    <h3> Anotações </h3>
+    {% if anotacoes %}
+    <table class="table">
+        <thead>
+            <tr>
+              <th scope="col">id Anotação </th>
+              <th scope="col">Titulo</th>
+              <th scope="col">Mensagem</th>
+              <th scope="col">Id usuario</th>
+              <th scope="col">Grupo</th>
+              <th scope="col">Data </th>
+              <th scope="col">Editar</th>
+              <th scope="col">Apagar</th>
+            </tr>
+          </thead>
+          <tbody>
+
+         
+    {% for anotacoes_usuarios in anotacoes %}
+        <tr>
+          <td> {{ anotacoes_usuarios.id }} </td>
+          <td> {{anotacoes_usuarios.title }} </td>
+          <td> {{anotacoes_usuarios.body }} </td>
+          <td> {{anotacoes_usuarios.fk_pessoa_id }} </td>
+          <td> 
+            {% if anotacoes_usuarios.fk_grupo == None%}
+             -
+            {% else %}
+              {{anotacoes_usuarios.fk_grupo.title}}
+            {% endif %}  
+          </td>
+          <td>
+            {{anotacoes_usuarios.date}}
+          </td>
+          <td> <a href="{% url 'editar_anotacao' anotacoes_usuarios.id  %}" title="{{anotacoes_usuarios.id}}"> Editar  </a> </td>
+          <td> <a href="{% url 'deleta_anotação' anotacoes_usuarios.id %}" title="{{anotacoes_usuarios.id}}"> Apagar  </a> </td>
+           <!-- {% url 'deleta_anotação' anotacoes_usuarios.id %} -->
+          
+        </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+  
+    {% endif %}
+   
+
+      
+{% endblock %}

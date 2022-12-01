@@ -1,0 +1,30 @@
+{% extends 'partials/base.html' %}
+
+{% block title %} Criar conta  {% endblock %}
+{% block content %}
+{% load widget_tweaks %}
+    {% include 'partials/menu.html' %}
+
+
+<section class="col-8"> 
+    <form action="{% url 'insertUsuario' %}" method="POST">
+        {% csrf_token %}
+        {% for field in formulario_cadastro.visible_fields %}
+        <div class="form-group">
+            <label for="{{field.id_for_label}}"> {{field.label}} </label>
+            {{field|add_class:'form-control'}}
+        </div>
+        {%  for error in field.errors %}
+        <section class="alert alert-danger mt-2" role="alert">
+            {{ field.errors }}
+         </section>
+</section>
+        {% endfor %}
+        {% endfor %}
+        <input type="submit" value="criar conta" class="btn btn-success mt-2">
+    </form>
+
+    já tem uma conta ? clique  <a href="{% url 'index' %}"> aqui para logar </a>
+</section>
+
+{% endblock %}

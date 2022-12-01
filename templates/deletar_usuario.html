@@ -1,0 +1,35 @@
+{% extends 'partials/base.html' %}
+{% block title %} Excluir conta  {% endblock %}
+
+
+
+
+{% block content%}
+{% load widget_tweaks %}
+    {% include 'partials/menu.html' %}
+    <h2> Excluir conta </h2>
+    <p> Ao excluir sua conta, todos os seus dados serão apagados</p>
+    <!--  -->
+    <form action="{% url 'deletar_conta' %}"  method="POST">
+        {% csrf_token %}
+        {% for field in deletar_conta_forms.visible_fields %}
+            <div class="form-group">
+                <label for="{{field.id_for_label}}"> {{field.label}} </label>
+                {{field|add_class:'form-control'}}
+            </div>
+            {%  for error in field.errors %}
+                <section class="alert alert-danger mt-2" role="alert">
+                    {{ field.errors }}
+                </section>
+            {% endfor %}
+        {% endfor %}
+       
+       
+
+       
+
+    {% include 'partials/alertas.html' %}
+    <input type="submit" value="deletar conta" class="btn btn-danger mt-2">
+    </form>
+
+{% endblock %}

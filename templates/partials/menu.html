@@ -1,0 +1,96 @@
+
+{% block content%}
+    <!-- As a link -->
+
+    <section class="mt-2"> 
+      <nav class="navbar navbar-light bg-light mb-2">
+        {% if user.is_authenticated %}
+       
+        <div class="dropdown show">
+          <a class="navbar-brand dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Anotações 
+          </a>
+        
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="{% url 'form_anotacoes' %}">Criar anotação  </a>
+            <a class="dropdown-item" href="{% url 'dashboard' %}"> Anotações  </a> 
+            
+          </div>
+        </div>
+        <div class="dropdown show">
+          <a class="navbar-brand dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Grupos
+          </a>
+        
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="{% url 'form_criar_grupo' %}">Criar grupos </a>
+            <a class="dropdown-item" href="{% url 'listar_grupos' %}">Grupos </a>
+            
+          </div>
+        </div>
+
+        <div class="dropdown show">
+          <a class="navbar-brand dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Tarefas
+          </a>
+        
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="{% url 'form_tarefas' %}">Criar tarefas </a>
+            <a class="dropdown-item" href="{% url 'listar_tarefas' %}">Tarefas </a>
+           
+          </div>
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    
+      
+    
+    
+
+    
+ 
+        <div class="dropdown show">
+          <a class="navbar-brand dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Configurações 
+          </a>
+        
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+            <a class="dropdown-item" href="{% url 'pagina_deletar_usuario'  %}"> Deletar conta  </a> 
+            <a class="dropdown-item" href="{% url 'pagina_alterar_usuario' %}">alterar dados </a>
+            <a class="dropdown-item" href="{% url 'pagina_alterar_senha' %}">alterar senha </a>
+           
+          </div>
+        </div>
+        
+        
+        
+        
+        
+        
+        
+        
+
+        <a class="navbar-brand" href="{% url 'logout' %}"> Sair  </a> 
+        
+        {% else %}
+      <a class="navbar-brand" href="{% url 'index' %}">Login </a>
+      <a class="navbar-brand" href="{% url 'cadastrar'%}">Criar conta </a>
+      {% endif %}
+  </nav>   
+  
+</section>
+
+{% endblock %}

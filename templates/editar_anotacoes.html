@@ -1,0 +1,73 @@
+
+{% extends 'partials/base.html' %}
+{% block title %} Editar Anotação  {% endblock %}
+
+
+
+
+{% block content%}
+{% load widget_tweaks %}
+{% include 'form_pesquisar_anotacao.html' %}
+
+    {% include 'partials/menu.html' %}
+    
+    <section class="col-8"> 
+    <form action="{% url 'atualizar_anotacao' %}" method="POST">
+        {% csrf_token %}
+        {% for field in form_anotacoes_atualizar %}
+        <div class="form-group">
+            <label for="{{field.id_for_label}}"> {{field.label}} </label>
+            {{field|add_class:'form-control'}}
+        </div>
+             {%  for error in field.errors %}
+                <section class="alert alert-danger mt-2" role="alert">
+                    {{ field.errors }}
+             </section>
+             {% endfor %}
+        {% endfor %}
+        <div class="form-group">
+            <label for="fk_grupo_edit_label"> Grupo:</label>
+            <select name="fk_grupo_edit" id="" class="form-control">
+                {% if grupo_edit %}
+               
+                    <option value="{{grupo_edit.id}}" selected> {{grupo_edit.title}} </option>
+                    <option value="" > sem grupo </option>
+                    {% for grupos_disponiveis in valores_grupos_editar %}
+                    <option value="{{grupos_disponiveis.id}}" > {{grupos_disponiveis.title}} </option>
+                    {% endfor %}
+                  
+                {% else %}
+                <option value=""> Nenhum grupo selecionado  </option>
+                {% for grupos_disponiveis in valores_grupos_editar %}
+                <option value="{{grupos_disponiveis.id}}" > {{grupos_disponiveis.title}} </option>
+                {% endfor %}
+                {% endif %}
+            </select>
+           
+           
+           
+
+        </div>       
+     
+        {% include 'partials/alertas.html' %}
+
+        <input type="hidden" value="{{id_anotacao}}" name='id_anotacao' readonly>
+        <input type="submit" value="editando Anotação" class="btn btn-success mt-2">
+    </form>
+   
+   
+</section>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+

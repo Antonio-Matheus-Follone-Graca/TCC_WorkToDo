@@ -1,0 +1,64 @@
+{% extends 'partials/base.html' %}
+{% block title %} Criar tarefa  {% endblock %}
+
+
+
+
+{% block content%}
+{% load widget_tweaks %}
+{% include 'form_pesquisar_tarefa.html' %}
+    {% include 'partials/menu.html' %}
+   <h3> formulario de tarefa </h3>
+    <section class="col-8"> 
+    <form action="{% url 'insert_tarefa' %}" method="POST">
+        {% csrf_token %}
+        {% for field in form_tarefa.visible_fields %}
+        <div class="form-group">
+            <label for="{{field.id_for_label}}"> {{field.label}} </label>
+            {{field|add_class:'form-control'}}
+        </div>
+             {%  for error in field.errors %}
+                <section class="alert alert-danger mt-2" role="alert">
+                    {{ field.errors }}
+             </section>
+             {% endfor %}
+        {% endfor %}
+       
+       <div class="form-group">
+            <label for="label_fk_grupo"> Grupo(opcional) </label>
+            <select name="fk_grupo" id="id_fk_grupo" class="form-control">
+                <option value="" selected> Selecione um grupo </option>
+                {% if grupo %}
+                {% for valores in grupo %}
+                    <option value="{{valores.id}}"> {{valores.title}} </option>
+                
+                {% endfor %}
+               
+               
+                
+              
+              
+              
+
+              
+                {% endif %}
+               
+               
+                              
+            </select>
+        </div>  
+       
+       
+       
+       
+       
+       
+       
+
+        {% include 'partials/alertas.html' %}
+        <input type="submit" value="criar tarefa" class="btn btn-success mt-2">
+    </form>
+   
+</section>
+
+{% endblock %}

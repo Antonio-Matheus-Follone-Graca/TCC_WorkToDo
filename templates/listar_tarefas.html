@@ -1,0 +1,69 @@
+{% extends 'partials/base.html' %}
+{% block title %} Grupos  {% endblock %}
+
+{% block content%}
+{% include 'form_pesquisar_tarefa.html' %}
+    {% include 'partials/menu.html' %}
+        <h1> Suas tarefas </h1>
+        {% if tarefas %}
+            <table class="table">
+                <thead>
+                    <tr>
+                      <th scope="col">id tarefa </th>
+                      <th scope="col">titulo da tarefa  </th>
+                      <th scope="col"> corpo </th>
+                      <th scope="col">data de inicio  </th>
+                      <th scope="col">data máxima para concluir  </th>
+                      <th scope="col">criado em   </th>
+                      <th scope="col">Data que a tarefa foi concluída   </th>
+                      <th scope="col">status  </th>
+                      <th scope="col">grupo  </th>
+                      <th scope="col">Apagar   </th>
+                      <th scope="col">editar  </th>
+                      <th scope="col">Concluir tarefa  </th>
+                   
+                   
+
+                    
+                    
+                     
+                     
+                      
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for valores_tarefas in tarefas %}
+                        <tr>
+                            <td> {{valores_tarefas.id}} </td>
+                            <td> {{valores_tarefas.title}} </td>
+                            <td> {{valores_tarefas.body}} </td>
+                            <td> {{valores_tarefas.date_start}} </td>
+                            <td> {{valores_tarefas.date_completion}} </td>
+                            <td> {{valores_tarefas.date}} </td>
+                            <td> 
+                              {% if valores_tarefas.date_conclusao == None %}
+                                -
+                              {% else %}
+                                {{valores_tarefas.date_conclusao}}  
+                              
+                                {% endif %}
+                            </td>
+                            <td> {{valores_tarefas.status}} </td>
+                            <td>
+                                {% if valores_tarefas.fk_grupo == None%}
+                                -
+                               {% else %}
+                                 {{valores_tarefas.fk_grupo.title}}
+                               {% endif %}  
+
+
+                            </td>
+                            <td> <a href="{% url 'deletar_tarefa' valores_tarefas.id %}" title="{{valores_tarefas.id}}"> Apagar  </a> </td>
+                            <td> <a href="{% url 'editar_tarefa' valores_tarefas.id %}" title="{{valores_tarefas.id}}"> Editar  </a> </td>
+                            <td> <a href="{% url 'concluir_tarefa' valores_tarefas.id %}" title="concluir tarefa"> Concluir tarefa  </a> </td>
+                        </tr>
+                    {% endfor %}
+                  </tbody>
+            </table>
+        {% endif %}
+{% endblock %}
