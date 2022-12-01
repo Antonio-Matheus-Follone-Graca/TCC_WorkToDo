@@ -9,18 +9,18 @@
             <table class="table">
                 <thead>
                     <tr>
-                      <th scope="col">id tarefa </th>
-                      <th scope="col">titulo da tarefa  </th>
-                      <th scope="col"> corpo </th>
-                      <th scope="col">data de inicio  </th>
-                      <th scope="col">data máxima para concluir  </th>
-                      <th scope="col">criado em   </th>
-                      <th scope="col">Data que a tarefa foi concluída   </th>
-                      <th scope="col">status  </th>
-                      <th scope="col">grupo  </th>
-                      <th scope="col">Apagar   </th>
-                      <th scope="col">editar  </th>
-                      <th scope="col">Concluir tarefa  </th>
+                      <th scope="col">Tarefa</th>
+                      <th scope="col">Título</th>
+                      <th scope="col">Corpo</th>
+                      <th scope="col">Criado</th>
+                      <th scope="col">Início  </th>
+                      <th scope="col">Data prevista</th>
+                      <th scope="col">Conclusão</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Grupo</th>
+                      <th scope="col">Apagar</th>
+                      <th scope="col">Editar</th>
+                      <th scope="col">Concluir</th>
                    
                    
 
@@ -37,9 +37,9 @@
                             <td> {{valores_tarefas.id}} </td>
                             <td> {{valores_tarefas.title}} </td>
                             <td> {{valores_tarefas.body}} </td>
+                            <td> {{valores_tarefas.date}} </td>
                             <td> {{valores_tarefas.date_start}} </td>
                             <td> {{valores_tarefas.date_completion}} </td>
-                            <td> {{valores_tarefas.date}} </td>
                             <td> 
                               {% if valores_tarefas.date_conclusao == None %}
                                 -

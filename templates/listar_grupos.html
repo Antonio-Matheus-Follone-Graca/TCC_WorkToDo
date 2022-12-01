@@ -9,24 +9,19 @@
             <table class="table">
                 <thead>
                     <tr>
-                      <th scope="col">id grupo </th>
-                      <th scope="col">Titulo</th>
-                      <th scope="col">descrição </th>
-                      <th scope="col">Cor </th>
-                      <th scope="col">fk_pessoa_id</th>
-                      <th scope="col">apagar </th>
-                      <th scope="col">Editar </th>
-                     
+                      <th scope="col">Título</th>
+                      <th scope="col">Descrição</th>
+                      <th scope="col">Cor</th>
+                      <th scope="col">Apagar</th>
+                      <th scope="col">Editar</th>
                     </tr>
                   </thead>
                   <tbody>
                     {% for valores_grupos in grupos %}
                         <tr>
-                            <td> {{valores_grupos.id}} </td>
                             <td> {{valores_grupos.title}} </td>
                             <td> {{valores_grupos.description}} </td>
                             <td> <input type="color"  value="{{valores_grupos.color}}" readonly> </td>
-                            <td> {{valores_grupos.fk_pessoa_id}} </td>
                           
                             <td> <a href="{% url 'pagina_deletar_grupo' valores_grupos.id %}" title="{{valores_grupos.id}}"> Apagar  </a> </td>
                             <td> <a href="{% url 'pagina_editar_grupo' valores_grupos.id %}" title="{{valores_grupos.id}}"> Editar  </a> </td>

@@ -40,12 +40,12 @@ class LoginForms(forms.Form):
 
 
 class CadastroForms(forms.Form):
-    username = forms.CharField(label='username, deve ser único', max_length=200)
-    nome = forms.CharField(label='nome',max_length=200)
-    sobrenome = forms.CharField(label='sobrenome',max_length=200)
-    email = forms.EmailField(label='email',max_length=200)
-    senha = forms.CharField(label='senha',min_length=6)
-    confirmar_senha = forms.CharField(label='confirmar senha',min_length=6)
+    username = forms.CharField(label='User Name', max_length=200)
+    nome = forms.CharField(label='Nome',max_length=200)
+    sobrenome = forms.CharField(label='Sobrenome',max_length=200)
+    email = forms.EmailField(label='E-mail',max_length=200)
+    senha = forms.CharField(label='Senha',min_length=6)
+    confirmar_senha = forms.CharField(label='Confirmar senha',min_length=6)
 
     def clean(self):
         username = self.cleaned_data.get('username')
@@ -88,9 +88,9 @@ class DeletarContaForms(forms.Form):
 
 class AlterarSenhaForms(forms.Form):
     # campo de digitar senha, confirmar senha e digitar a senha atual para  a atualização da senha
-    senha = forms.CharField(label='senha nova',min_length=6)
-    confirmar_senha = forms.CharField(label='confirmar senha',min_length=6)
-    senha_atual = forms.CharField(label='senha atual',min_length=6)
+    senha = forms.CharField(label='Senha nova',min_length=6)
+    confirmar_senha = forms.CharField(label='Confirmar senha',min_length=6)
+    senha_atual = forms.CharField(label='Senha atual',min_length=6)
 
     def clean(self):
         senha = self.cleaned_data.get('senha')
