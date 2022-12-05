@@ -59,10 +59,3 @@ def campo_vazio(campo,lista_de_erros):
     else:
         return False
 
-
-def codigo_numeros_errados(codigo,lista_de_erros):
-    if codigo.isdigit() == False:
-        lista_de_erros['codigo'] = 'digite apenas números'
-
-
-

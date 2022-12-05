@@ -116,33 +116,6 @@ class AlterarSenhaForms(forms.Form):
         # retornando dados da classe clean 
         return self.cleaned_data
 
-class VerifciarUsuario(forms.Form):
-        codigo = forms.CharField(label='Código',max_length=6, required=True)
-        def clean(self):
-            codigo = self.cleaned_data.get('codigo')
-            # dicionario com lista de erros 
-            lista_de_erros = {}
-            # validação do campo vazio, else se for False  chama as outras funções
-            # pois preciso das outras funcoes para validacoes, porém com elas a função nativa do django forms de validar campo vazio não roda 
-            codigo_numeros_errados(codigo,lista_de_erros)
-         
-           
-           
-   
-     # se a lista de erros estiver com um valor, então há um erro nela 
-            if lista_de_erros is not None:
-            # looping de cada erro 
-                for erro in lista_de_erros:
-                    mensagem_erro = lista_de_erros[erro]
-                    # atribuindo erro na classe 
-                    self.add_error(erro,mensagem_erro)
- 
- 
-        # retornando dados da classe clean 
-            return self.cleaned_data
-
-
-
 
 
 
