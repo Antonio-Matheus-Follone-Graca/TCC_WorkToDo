@@ -469,15 +469,10 @@ def verificar_codigo(request):
 
         else:
             return render(request,'verificacao.html',contexto)
- 
-
-
+        
         # transformando em string e colocando em hash
         # codigo = str(codigo)
         # codigo em hash codigo_digitado_hash = (hash(codigo))
-
-       
-
     else:
         return redirect('index')
 
