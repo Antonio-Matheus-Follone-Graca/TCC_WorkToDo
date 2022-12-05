@@ -1,8 +1,6 @@
 
 from django.shortcuts import render, redirect,get_object_or_404
-import random
-# notify
-from py import email
+import random 
 from email.message import EmailMessage
 import ssl
 import smtplib
@@ -72,13 +70,11 @@ def logar(request):
                     # percorrendo objeto usuariom django funciona assim mesmo tendo um registro apenas
                     for valor in usuario:
                         validate = valor.is_active
-                        receiver = valor.email
                     
                     if validate == False:
                         # manda o e-mail para o usuario 
                         # manda para a pagina de validacao
                         codigo = gerar_numero()
-                        Notifica_usuario(receiver, "Work To Do - Verification", f"Código de verificação: {codigo}")
                         return render(request,'verificacao.html')
                     
                     else:
@@ -404,11 +400,11 @@ def gerar_numero():
     codigo_final = int(codigo_string)
     return  codigo_final
 #----------------------------------------------------------------------------------------------------------------------
-def Notifica_usuario(receiver, subject, body):
+def Notifica_usuario(sender, password, receiver, subject, body):
     print()
 
-    email_sender = 'notifications.worktodo@gmail.com'
-    email_password = 'keccwwdnreawqxje'
+    email_sender = sender
+    email_password = password
     email_receiver = receiver
 
     Subject = subject
@@ -426,3 +422,4 @@ def Notifica_usuario(receiver, subject, body):
         smtp.login(email_sender, email_password)
         smtp.sendmail(email_sender, email_receiver, em.as_string())
 #----------------------------------------------------------------------------------------------------------------------
+    
