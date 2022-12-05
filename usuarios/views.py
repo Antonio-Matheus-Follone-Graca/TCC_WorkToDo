@@ -1,34 +1,21 @@
 
 from django.shortcuts import render, redirect,get_object_or_404
-
-
 # importando o forms 
-
 from usuarios.forms import LoginForms,CadastroForms, DeletarContaForms,AlterarSenhaForms
-
-
 # criptografia padrão django 
-
-
-
-
 # importando model user 
-
 from django.contrib.auth.models import User
 # importando biblioteca para login  e messages 
-
 from django.contrib import auth, messages
-
 # importando view das anotacoes que lista todas as anotações do usuario 
-
 from anotacoes.views import listar_anotacoes
-
 from django.contrib.auth.decorators import login_required
-
-
+# Send email
+from email.message import EmailMessage
+import ssl
+import smtplib
 # Create your views here.
-
-
+#----------------------------------------------------------------------------------------------------------------------
 # rota aonde fica a página de login
 def index(request):
     # se o usuario estiver logado mas se ele colocar o endereço da url dessa pagina
@@ -41,8 +28,7 @@ def index(request):
         # passando o form para dicionario
         contexto = {'login_form':form}
         return render(request,'index.html',contexto)
-
-
+#----------------------------------------------------------------------------------------------------------------------
 # view que recebe o formulário de login 
 def logar(request):
     # validando se formulário foi enviado ou não 
@@ -92,12 +78,7 @@ def logar(request):
         return redirect('index')
 
     return render(request,'index.html',contexto) 
-       
-   
-   
-
-  
-
+#----------------------------------------------------------------------------------------------------------------------       
 # view que redireciona para a página de criar conta 
 def cadastrar(request):
     # se o usuario estiver logado mas se ele colocar o endereço da url dessa pagina
@@ -111,8 +92,7 @@ def cadastrar(request):
         contexto = {'formulario_cadastro':formulario_cadastro}
         # mandando o formulario para a pagina de cadastro 
         return render(request,'cadastrar.html',contexto)
-
-
+#----------------------------------------------------------------------------------------------------------------------
 # view que cria a conta, que recebe os dados do formulário formCriarConta
 def insertUsuario(request):
     # se o usuario clicou no enviar formulario
@@ -133,8 +113,9 @@ def insertUsuario(request):
            # criando usuario
             user =  User.objects.create_user(username=username, email=email,password=senha,first_name=nome, last_name=sobrenome, is_superuser= False)
             user.save()
-           
-           # redirecionando para à pagina de login 
+            # Notifica usuário
+            Notifica_usuario(user.email, "Work To Do - Usuário Criado!", f"Parabéns {user.username}, usuário criado com sucesso!")
+            # redirecionando para à pagina de login 
             return redirect('index')
         
         else:
@@ -143,19 +124,15 @@ def insertUsuario(request):
         
     else:
         return redirect('cadastrar')
-
-
-
+#----------------------------------------------------------------------------------------------------------------------
 # so realiza o logout
 def logout(request):
     # deslogando o usuario
     auth.logout(request)
     # redirecionando para a pagina principal 
     return redirect('index')
-
-
+#----------------------------------------------------------------------------------------------------------------------
 # mostrando as anotações dos usuarios 
-
 @login_required
 def dashboard(request):
     # verifica se o usuario está logado 
@@ -169,26 +146,7 @@ def dashboard(request):
         
         else :
             return redirect('index')
-
-''' 
-        if request.user.is_authenticated: 
-        id = request.user.id 
-
-        # guardando anotacoes do usuario via select pelo seu id 
-        anotacoes = Anotacoes.objects.filter(fk_pessoa_id = id)
-
-        # dicionario com as anotacoes 
-        dados = {
-            'anotacoes' : anotacoes
-        }
-        return render(request,'dashboard.html',dados) 
-    
-    else:
-        return redirect('index')
-'''
-
-
-
+#----------------------------------------------------------------------------------------------------------------------
 # para acessar essa pagina, o usuario deverá estar logado
 @login_required
 def pagina_deletar_usuario(request):
@@ -201,18 +159,7 @@ def pagina_deletar_usuario(request):
 
     else:
         return redirect('dashboard')
-   
-   
-   
-   
-   
-
-   
-   
-   
-
-
-
+#----------------------------------------------------------------------------------------------------------------------
 def deletar_conta(request):
     if request.method == 'POST':
         deletar_conta_forms = DeletarContaForms(request.POST)
@@ -239,9 +186,6 @@ def deletar_conta(request):
         else:
             return render(request,'deletar_usuario.html', contexto)
         
-
-
-       
         # ao deletar usuario os registros de anotações, grupos e tarefas também são deletados  e já faz o logout sozinho
        # 
        
@@ -249,8 +193,7 @@ def deletar_conta(request):
     
     else:
         return redirect('dashboard')
-
-
+#----------------------------------------------------------------------------------------------------------------------
 # para acessar essa pagina, o usuario deverá estar logado
 @login_required
 def pagina_alterar_usuario(request):
@@ -277,9 +220,7 @@ def pagina_alterar_usuario(request):
     
     else:
         return redirect('dashboard')
-
-
-
+#----------------------------------------------------------------------------------------------------------------------
 def update_usuario(request):
     # se o usuario clicou no enviar formulario
     if request.method == 'POST':
@@ -352,19 +293,10 @@ def update_usuario(request):
         print('dados atualizados com sucesso ') 
         return redirect('dashboard')
       
-
-
-
-
-
-
-        
     
     else:
         return redirect('dashboard')
-
-
-
+#----------------------------------------------------------------------------------------------------------------------
 # pagina de alterar senha
 # para acessar essa pagina, o usuario deverá estar logado
 @login_required
@@ -377,8 +309,7 @@ def pagina_alterar_senha(request):
 
     else:
         return redirect('dashboard')
-
-
+#----------------------------------------------------------------------------------------------------------------------
 def atualizar_senha(request):
     if request.method == 'POST':
         # colocando os dados na classe do formulario
@@ -420,4 +351,26 @@ def atualizar_senha(request):
 
     else:
         return redirect('dashboard')
-    
+#----------------------------------------------------------------------------------------------------------------------
+def Notifica_usuario(receiver, subject, body):
+    print()
+
+    email_sender = 'notifications.worktodo@gmail.com'
+    email_password = 'keccwwdnreawqxje'
+    email_receiver = receiver
+
+    Subject = subject
+    Body    = body
+
+    em = EmailMessage()
+    em['From']    = email_sender
+    em['To']      = email_receiver
+    em['Subject'] = Subject
+    em.set_content(Body)
+
+    context = ssl.create_default_context()
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+        smtp.login(email_sender, email_password)
+        smtp.sendmail(email_sender, email_receiver, em.as_string())
+#----------------------------------------------------------------------------------------------------------------------
