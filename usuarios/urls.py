@@ -27,7 +27,10 @@ urlpatterns = [
     # pagina de alterar senha
     path('pagina_alterar_senha',views.pagina_alterar_senha, name='pagina_alterar_senha'),
     # atualiza a senha em si 
-    path('atualizar_senha',views.atualizar_senha, name='atualizar_senha')
+    path('atualizar_senha',views.atualizar_senha, name='atualizar_senha'),
+    # pagina de verificacao
+    path('pagina_verificacao/<str:email>', views.pagina_verificacao, name='pagina_verificacao'),
+    path('verificar_codigo',views.verificar_codigo, name='verificar_codigo')
    
 
 ]

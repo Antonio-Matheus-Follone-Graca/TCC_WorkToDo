@@ -2,12 +2,11 @@
 from django.shortcuts import render, redirect,get_object_or_404
 import random
 # notify
-from py import email
 from email.message import EmailMessage
 import ssl
 import smtplib
 # importando o forms 
-from usuarios.forms import LoginForms,CadastroForms, DeletarContaForms,AlterarSenhaForms
+from usuarios.forms import LoginForms,CadastroForms, DeletarContaForms,AlterarSenhaForms,VerifciarUsuario
 # criptografia padrão django 
 # importando model user 
 from django.contrib.auth.models import User
@@ -74,12 +73,12 @@ def logar(request):
                         validate = valor.is_active
                         receiver = valor.email
                     
+                    
+                    
+                    
                     if validate == False:
-                        # manda o e-mail para o usuario 
-                        # manda para a pagina de validacao
-                        codigo = gerar_numero()
-                        Notifica_usuario(receiver, "Work To Do - Verification", f"Código de verificação: {codigo}")
-                        return render(request,'verificacao.html')
+                        # chamando metodo que manda para a página de verificacao  e passando o e-mail do usuario como parametro
+                        return redirect('pagina_verificacao', email = receiver)
                     
                     else:
                         messages.error(request, 'senha errada')
@@ -88,13 +87,12 @@ def logar(request):
 
                    
             else:
-                messages.error(request, 'email não existe em nosso banco de dados')
+                messages.error(request, 'Usuário não encontrado')
                 return render(request,'index.html',contexto)
 
 
         # form invalidio
         else:
-            print('formulario invalido')
             contexto = {'login_form':form}
             return render(request,'index.html',contexto)
 
@@ -426,3 +424,67 @@ def Notifica_usuario(receiver, subject, body):
         smtp.login(email_sender, email_password)
         smtp.sendmail(email_sender, email_receiver, em.as_string())
 #----------------------------------------------------------------------------------------------------------------------
+def pagina_verificacao(request,email):
+    '''
+    receiver: e-mail do usuario
+
+    essa funcao foi chamada  pelo metodo de logar na parte do if is_active == False na linha 78
+    '''
+    # gera um código de 6 digitos e em seguida envia um e-mail para o usuario
+    codigo = gerar_numero()
+    Notifica_usuario(email, "Work To Do - Verification", f"Código de verificação: {codigo}")
+
+    # chamando formulário 
+    form = VerifciarUsuario()
+    # dicionario com codigo do usuário e o formulario de verificar
+
+    codigo = str(codigo)
+
+    contexto = {
+        'dicionario_codigo' : hash(codigo),
+        'numero': codigo,
+        'form_verificar': form
+    }
+
+  
+    return render(request, 'verificacao.html',contexto)
+#----------------------------------------------------------------------------------------------------------------------
+
+def verificar_codigo(request):
+    # se clicou  no formulario
+
+    if request.method == 'POST':
+        form_verificar = VerifciarUsuario(request.POST)
+        hash = {
+            'Teste'
+        }
+        contexto = {
+            'form_verificar':form_verificar,
+            'hash': hash
+        }
+        codigo = request.POST['codigo']
+        codigo_hash = request.POST['codigo_hash']
+        if form_verificar.is_valid():
+            return redirect('index') 
+
+        else:
+            return render(request,'verificacao.html',contexto)
+ 
+
+
+        # transformando em string e colocando em hash
+        # codigo = str(codigo)
+        # codigo em hash codigo_digitado_hash = (hash(codigo))
+
+       
+
+    else:
+        return redirect('index')
+
+
+
+
+   
+  
+     
+
