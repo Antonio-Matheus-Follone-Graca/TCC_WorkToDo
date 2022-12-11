@@ -64,50 +64,63 @@ def insert_tarefa(request):
         grupo = request.POST['fk_grupo']
         date_start = request.POST['date_start']
         date_completion = request.POST['date_completion']
+        # formatando as datas para o formato datetime que  o banco de dados aceita: YYYY-MM-DD H:M:S  (ano-mes-dia Hora:Minuto:Segundo)
       
-        # não sei se deixo o campo status no formulario, por enquanto não 
-        #status = request.POST['status']
-        
-        
-        if form_tarefas.is_valid():
-            # formatando as datas para o formato datetime que  o banco de dados aceita: YYYY-MM-DD H:M:S  (ano-mes-dia Hora:Minuto:Segundo)
-      
-            date_start = datetime.strptime(date_start,'%d/%m/%Y %H:%M:%S').strftime("%Y-%m-%d %H:%M:%S")
-            date_completion = datetime.strptime(date_completion,'%d/%m/%Y %H:%M:%S').strftime("%Y-%m-%d %H:%M:%S")
-            # pegando usuario que fez a anotação  
-            user = get_object_or_404(User, pk = request.user.id)
-            # se estiver vazio é pq no campo select o usuario não selecionou nenhum grupo 
-            if grupo.strip() == "" :
-                objeto_grupo = None
-  
-            else:
-                # pegando o objeto do grupo 
-                objeto_grupo= get_object_or_404(Grupo, pk=grupo)
-            
-            
-            tarefa = Tarefas.objects.create(title = titulo, body = mensagem , fk_pessoa = user, fk_grupo = objeto_grupo, date_start = date_start, date_completion = date_completion)
-            
-            # fazendo o insert 
+        date_start = datetime.strptime(date_start,'%d/%m/%Y %H:%M:%S').strftime("%Y-%m-%d %H:%M:%S")
+        date_completion = datetime.strptime(date_completion,'%d/%m/%Y %H:%M:%S').strftime("%Y-%m-%d %H:%M:%S")
 
+        # chamando funcao de automacao que só aceita datas de hoje para frente
 
-            tarefa.save()
+        date_start_ja_passou = data_ja_passou(date_start)
+        date_completion_ja_passou = data_ja_passou(date_completion)
 
-            return redirect('listar_tarefas')
-        
-        # se o formulario não for valido
+        # se deu tudo certo(datas  validas)
+        if date_start_ja_passou == False and date_completion_ja_passou == False:
 
-        else:
-            return render(request,'form_tarefas.html',contexto)
- 
-        
-
-
-       
- 
-
-  
-
+            if form_tarefas.is_valid():
+                # pegando usuario que fez a anotação  
+                user = get_object_or_404(User, pk = request.user.id)
+                # se estiver vazio é pq no campo select o usuario não selecionou nenhum grupo 
+                if grupo.strip() == "" :
+                    objeto_grupo = None
     
+                else:
+                    # pegando o objeto do grupo 
+                    objeto_grupo= get_object_or_404(Grupo, pk=grupo)
+                
+                
+                tarefa = Tarefas.objects.create(title = titulo, body = mensagem , fk_pessoa = user, fk_grupo = objeto_grupo, date_start = date_start, date_completion = date_completion)
+                
+                # fazendo o insert 
+
+
+                tarefa.save()
+
+                return redirect('listar_tarefas')
+            
+            # se o formulario não for valido
+
+            else:
+                return render(request,'form_tarefas.html',contexto)
+        
+
+        elif date_start_ja_passou == True and date_completion_ja_passou == True:
+            messages.error(request, 'data de conclusao e início inválidas: o dia ou hora do dia já passou')
+            return render(request,'form_tarefas.html',contexto)
+
+        
+        elif date_start_ja_passou == True:
+            messages.error(request, 'data de início inválida: o dia ou hora do dia já passou')
+            return render(request,'form_tarefas.html',contexto)
+
+        
+        elif date_completion_ja_passou == True:
+            messages.error(request, 'data de conclusao inválida: o dia ou hora do dia já passou')
+            return render(request,'form_tarefas.html',contexto)
+        
+      
+            
+
     else:
         return render(request,'form_tarefas.html',contexto)
         
@@ -287,6 +300,27 @@ def buscar_tarefa(request):
         
         else:
             return redirect('dashboard')
+
+def  data_ja_passou(data):
+    '''
+     verifica se a data informada já passou e retorna true ou false 
+    '''
+
+    hoje = datetime.now()
+    # removendo os milisegundos do datetime.now() para comparar com o parametro data
+    #YYYY-MM-DD H:M:S  (ano-mes-dia Hora:Minuto:Segundo)
+    hoje = hoje.strftime("%Y-%m-%d %H:%M:%S")
+    if data < hoje:
+        return True
+    
+    # datas exatamente iguais, mesmo horas, segundos e minutos
+    elif data == hoje:
+        return False
+
+    else:
+        return False
+
+
 
       
       

@@ -14,8 +14,8 @@ from datetime import datetime
 class Tarefas(models.Model):
     title = models.CharField(max_length=200,blank=False) # campo obrigatorio 
     body = models.TextField(blank=True) # campo pode ser vazio 
-    date_start = models.DateTimeField(blank = False, null =False)
-    date_completion = models.DateTimeField(blank = True, null = True ) # data maxima para concluir a tarefa
+    date_start = models.DateTimeField(blank=False)
+    date_completion = models.DateTimeField(blank=False ) # data maxima para concluir a tarefa
     date_conclusao= models.DateTimeField(blank = True, null = True)  # data que a tarefa foi concluisa
     status = models.CharField(blank= True, null = True, max_length = 200,default='pendente')
     date= models.DateField(default=datetime.now,blank=True)
