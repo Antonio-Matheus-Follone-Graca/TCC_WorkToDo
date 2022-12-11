@@ -105,17 +105,17 @@ def insert_tarefa(request):
         
 
         elif date_start_ja_passou == True and date_completion_ja_passou == True:
-            messages.error(request, 'data de conclusao e início inválidas: o dia ou hora do dia já passou')
+            messages.error(request, 'data de conclusao e início inválidas: o dia ou a hora do dia já passou')
             return render(request,'form_tarefas.html',contexto)
 
         
         elif date_start_ja_passou == True:
-            messages.error(request, 'data de início inválida: o dia ou hora do dia já passou')
+            messages.error(request, 'data de início inválida: o dia ou a  hora do dia já passou')
             return render(request,'form_tarefas.html',contexto)
 
         
         elif date_completion_ja_passou == True:
-            messages.error(request, 'data de conclusao inválida: o dia ou hora do dia já passou')
+            messages.error(request, 'data de conclusao inválida: o dia ou a hora do dia já passou')
             return render(request,'form_tarefas.html',contexto)
         
       
@@ -204,47 +204,62 @@ def atualizar_tarefa(request):
         # pegando dados da data
         date_start_edit = request.POST['date_start']
         date_completion_edit = request.POST['date_completion']
-        
         # formatando as datas para o formato datetime que  o banco de dados aceita: YYYY-MM-DD H:M:S  (ano-mes-dia Hora:Minuto:Segundo)
-
-        
-        
-      
-
-        # criando contexto com id do usuario 
-
-        # pois se acontecer um erro no formulario, a pagina será recarregada e o campo id  estará com valor nulo 
+        date_start_edit = datetime.strptime(date_start_edit,'%d/%m/%Y %H:%M:%S').strftime("%Y-%m-%d %H:%M:%S")
+        date_completion_edit = datetime.strptime(date_completion_edit,'%d/%m/%Y %H:%M:%S').strftime("%Y-%m-%d %H:%M:%S")
+        # criando contexto com id do usuario ,pois se acontecer um erro no formulario, a pagina será recarregada e o campo id  estará com valor nulo 
 
         contexto ={
             'form_tarefa' : form_tarefa_edit,
             'id_tarefa' : tarefa_id
         }
 
-        if form_tarefa_edit.is_valid():
-            date_start_edit = datetime.strptime(date_start_edit,'%d/%m/%Y %H:%M:%S').strftime("%Y-%m-%d %H:%M:%S")
-            date_completion_edit = datetime.strptime(date_completion_edit,'%d/%m/%Y %H:%M:%S').strftime("%Y-%m-%d %H:%M:%S")
-            # pegando o id da tarefa no banco de dados
-            # pk = primary key 
-            tarefa_update = Tarefas.objects.get(pk = tarefa_id)
+        # chamando funcao de automacao que só aceita datas de hoje para frente
 
-            # alterando os dados
-            tarefa_update.title = request.POST['title']
-            tarefa_update.body = request.POST['body']
-            tarefa_update.date_start = date_start_edit
-            tarefa_update.date_completion = date_completion_edit
-           # tarefa_update.status = request.POST['status']
-            tarefa_update.fk_grupo_id = request.POST['fk_grupo_edit']
+        date_start_ja_passou = data_ja_passou(date_start_edit)
+        date_completion_ja_passou = data_ja_passou(date_completion_edit)
+          # se deu tudo certo(datas  validas)
+        if date_start_ja_passou == False and date_completion_ja_passou == False:
+            if form_tarefa_edit.is_valid():
             
+                # pegando o id da tarefa no banco de dados
+                # pk = primary key 
+                tarefa_update = Tarefas.objects.get(pk = tarefa_id)
 
-            # atualizando a tarefa
+                # alterando os dados
+                tarefa_update.title = request.POST['title']
+                tarefa_update.body = request.POST['body']
+                tarefa_update.date_start = date_start_edit
+                tarefa_update.date_completion = date_completion_edit
+            # tarefa_update.status = request.POST['status']
+                tarefa_update.fk_grupo_id = request.POST['fk_grupo_edit']
+                
 
-            # se deu tudo certo 
-            tarefa_update.save()
-            return redirect('listar_tarefas')
+                # atualizando a tarefa
+
+                # se deu tudo certo 
+                tarefa_update.save()
+                return redirect('listar_tarefas')
+            
+            else:
+                tarefa_id = tarefa_id
+                return render(request,'editar_tarefa.html',contexto)
+
+                
+        elif date_start_ja_passou == True and date_completion_ja_passou == True:
+            messages.error(request, 'data de conclusao e início inválidas: o dia ou a hora do dia já passou')
+            return render(request,'form_tarefas.html',contexto)
+
         
-        else:
-            tarefa_id = tarefa_id
-            return render(request,'editar_tarefa.html',contexto)
+        elif date_start_ja_passou == True:
+            messages.error(request, 'data de início inválida: o dia ou a  hora do dia já passou')
+            return render(request,'form_tarefas.html',contexto)
+
+        
+        elif date_completion_ja_passou == True:
+            messages.error(request, 'data de conclusao inválida: o dia ou a hora do dia já passou')
+            return render(request,'form_tarefas.html',contexto)
+        
 
     else:
         return redirect('dashboard') 
