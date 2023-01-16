@@ -13,4 +13,4 @@ O link original está aqui **<https://github.com/This-Is-NPC/WorkToDo>**
 
 
 
-## bibliotecas que devem ser instadas para o correto funcionamento do programa
+## bibliotecas que devem ser instaladas para o correto funcionamento do programa
