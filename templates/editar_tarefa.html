@@ -28,7 +28,6 @@
             <label for="fk_grupo_edit_label"> Grupo:</label>
             <select name="fk_grupo_edit" id="" class="form-control">
                 {% if grupo_edit %}
-               
                     <option value="{{grupo_edit.id}}" selected> {{grupo_edit.title}} </option>
                     <option value="" > sem grupo </option>
                     {% for grupos_disponiveis in valores_grupos_editar %}
@@ -49,9 +48,10 @@
         </div>       
      
         {% include 'partials/alertas.html' %}
-
+       
         <input type="hidden" value="{{id_tarefa}}" name='id_tarefa' readonly>
-        <input type="submit" value="editando Anotação" class="btn btn-success mt-2">
+       
+        <input type="submit" value="editar tarefa" class="btn btn-success mt-2">
     </form>
    
    

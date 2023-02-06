@@ -55,9 +55,12 @@ def form_tarefas(request):
 
 def insert_tarefa(request):
     if request.method == 'POST':
+        # pegando o grupo pelo id do usuario 
+        valores_grupos = Grupo.objects.filter(fk_pessoa_id = request.user.id)
+   
         # pegando dados
         form_tarefas = FormTarefas(request.POST)
-        contexto = {'form_tarefa':form_tarefas}
+        contexto = {'form_tarefa':form_tarefas,'grupo':valores_grupos}
 
         titulo = request.POST['title']
         mensagem = request.POST['body']
@@ -70,40 +73,41 @@ def insert_tarefa(request):
         date_completion = datetime.strptime(date_completion,'%d/%m/%Y %H:%M:%S').strftime("%Y-%m-%d %H:%M:%S")
 
         # chamando funcao de automacao que só aceita datas de hoje para frente
-
-        date_start_ja_passou = data_ja_passou(date_start)
-        date_completion_ja_passou = data_ja_passou(date_completion)
+        
+        #date_start_ja_passou = data_ja_passou(date_start)
+        #date_completion_ja_passou = data_ja_passou(date_completion)
 
         # se deu tudo certo(datas  validas)
-        if date_start_ja_passou == False and date_completion_ja_passou == False:
-
-            if form_tarefas.is_valid():
-                # pegando usuario que fez a anotação  
-                user = get_object_or_404(User, pk = request.user.id)
-                # se estiver vazio é pq no campo select o usuario não selecionou nenhum grupo 
-                if grupo.strip() == "" :
-                    objeto_grupo = None
+        if form_tarefas.is_valid():
+            # pegando usuario que fez a anotação  
+            user = get_object_or_404(User, pk = request.user.id)
+            # se estiver vazio é pq no campo select o usuario não selecionou nenhum grupo 
+            objeto_grupo=""
+            if grupo.strip() == "" :
+                objeto_grupo = None
+               
     
-                else:
-                    # pegando o objeto do grupo 
-                    objeto_grupo= get_object_or_404(Grupo, pk=grupo)
-                
-                
-                tarefa = Tarefas.objects.create(title = titulo, body = mensagem , fk_pessoa = user, fk_grupo = objeto_grupo, date_start = date_start, date_completion = date_completion)
-                
-                # fazendo o insert 
+            else:
+                # pegando o objeto do grupo 
+                objeto_grupo= get_object_or_404(Grupo, pk=grupo)
+            
 
+            # fazendo o insert 
+            tarefa = Tarefas.objects.create(title = titulo, body = mensagem , fk_pessoa = user, fk_grupo = objeto_grupo, date_start = date_start, date_completion = date_completion)
+            # fazendo o insert 
+            tarefa.save()
 
-                tarefa.save()
-
-                return redirect('listar_tarefas')
+            return redirect('listar_tarefas')
             
             # se o formulario não for valido
 
-            else:
-                return render(request,'form_tarefas.html',contexto)
-        
+        else:
+            return render(request,'form_tarefas.html',contexto)
 
+    else:
+        return render(request,'form_tarefas.html',contexto)
+        
+        ''' 
         elif date_start_ja_passou == True and date_completion_ja_passou == True:
             messages.error(request, 'data de conclusao e início inválidas: o dia ou a hora do dia já passou')
             return render(request,'form_tarefas.html',contexto)
@@ -117,12 +121,12 @@ def insert_tarefa(request):
         elif date_completion_ja_passou == True:
             messages.error(request, 'data de conclusao inválida: o dia ou a hora do dia já passou')
             return render(request,'form_tarefas.html',contexto)
+        '''
         
       
             
 
-    else:
-        return render(request,'form_tarefas.html',contexto)
+    
         
 
 
@@ -163,7 +167,7 @@ def editar_tarefa(request, id_editar_tarefa):
 
     if request.method == 'GET' and  id_editar_tarefa:
 
-        # pega todos os da anotação pelo id dela 
+        # pega todos os dados da tarefa que quero editar via id 
         tarefa_edit = Tarefas.objects.get(id = id_editar_tarefa)
      
      
@@ -178,7 +182,7 @@ def editar_tarefa(request, id_editar_tarefa):
             # não passo a grupo grupo_edit para o template senão dará erro 
             contexto= {'form_tarefa':form,'id_tarefa':id_editar_tarefa,'valores_grupos_editar':valores_grupos_editar}
 
-        # é pq tem grupo na anotação 
+        # é pq tem grupo na tarefa 
         else:
             valores_grupos_editar = valores_grupos_editar.exclude(id = grupo_edit.id)
             contexto= {'form_tarefa':form,'id_tarefa':id_editar_tarefa,'grupo_edit':grupo_edit,'valores_grupos_editar':valores_grupos_editar}
@@ -197,6 +201,8 @@ def editar_tarefa(request, id_editar_tarefa):
 
 
 def atualizar_tarefa(request):
+    
+
     if request.method == 'POST':
         # pegando o id da tarefa
         tarefa_id = request.POST['id_tarefa'] 
@@ -207,45 +213,66 @@ def atualizar_tarefa(request):
         # formatando as datas para o formato datetime que  o banco de dados aceita: YYYY-MM-DD H:M:S  (ano-mes-dia Hora:Minuto:Segundo)
         date_start_edit = datetime.strptime(date_start_edit,'%d/%m/%Y %H:%M:%S').strftime("%Y-%m-%d %H:%M:%S")
         date_completion_edit = datetime.strptime(date_completion_edit,'%d/%m/%Y %H:%M:%S').strftime("%Y-%m-%d %H:%M:%S")
-        # criando contexto com id do usuario ,pois se acontecer um erro no formulario, a pagina será recarregada e o campo id  estará com valor nulo 
-
-        contexto ={
-            'form_tarefa' : form_tarefa_edit,
-            'id_tarefa' : tarefa_id
-        }
+       
 
         # chamando funcao de automacao que só aceita datas de hoje para frente
 
-        date_start_ja_passou = data_ja_passou(date_start_edit)
-        date_completion_ja_passou = data_ja_passou(date_completion_edit)
+       # date_start_ja_passou = data_ja_passou(date_start_edit)
+        #date_completion_ja_passou = data_ja_passou(date_completion_edit)
           # se deu tudo certo(datas  validas)
-        if date_start_ja_passou == False and date_completion_ja_passou == False:
-            if form_tarefa_edit.is_valid():
+       
+        if form_tarefa_edit.is_valid():
             
-                # pegando o id da tarefa no banco de dados
-                # pk = primary key 
-                tarefa_update = Tarefas.objects.get(pk = tarefa_id)
-
-                # alterando os dados
-                tarefa_update.title = request.POST['title']
-                tarefa_update.body = request.POST['body']
-                tarefa_update.date_start = date_start_edit
-                tarefa_update.date_completion = date_completion_edit
+            # pegando o id da tarefa no banco de dados
+            # pk = primary key 
+            tarefa_update = Tarefas.objects.get(pk = tarefa_id)
+            # alterando os dados
+            tarefa_update.title = request.POST['title']
+            tarefa_update.body = request.POST['body']
+            tarefa_update.date_start = date_start_edit
+            tarefa_update.date_completion = date_completion_edit
             # tarefa_update.status = request.POST['status']
-                tarefa_update.fk_grupo_id = request.POST['fk_grupo_edit']
-                
+            tarefa_update.fk_grupo_id = request.POST['fk_grupo_edit']
+            # atualizando a tarefa
+            # se deu tudo certo 
+            tarefa_update.save()
+            return redirect('listar_tarefas')
 
-                # atualizando a tarefa
+        # se o formulario estiver invalido(com erros)            
+        else:
+            # criando contexto com id do usuario ,pois se acontecer um erro no formulario, a pagina será recarregada e o campo id  estará com valor nulo 
 
-                # se deu tudo certo 
-                tarefa_update.save()
-                return redirect('listar_tarefas')
-            
+            # o código abaixo é para caso o formulário não seja valido, ai preciso mostrar os erros mas sem comprometer o contexto 
+            #  
+            # pega todos os dados da tarefa que quero editar via id 
+            tarefa_edit = Tarefas.objects.get(id = tarefa_id)
+       
+            # pegando o grupo atual do usuario 
+            grupo_edit = tarefa_edit.fk_grupo
+            if grupo_edit is None :
+                grupo_edit = None
+                valores_grupos_editar = Grupo.objects.filter(fk_pessoa_id = request.user.id)
+        
             else:
-                tarefa_id = tarefa_id
-                return render(request,'editar_tarefa.html',contexto)
+                # select do grupo da tarefa via id
+                grupo_edit = get_object_or_404(Grupo, pk = grupo_edit.id)
+                valores_grupos_editar = None
+                valores_grupos_editar = Grupo.objects.filter(fk_pessoa_id = request.user.id).exclude(id = grupo_edit.id)
+        
 
-                
+            valores_grupos_editar = valores_grupos_editar
+            contexto ={
+                'form_tarefa' : form_tarefa_edit,
+                'id_tarefa' : tarefa_id,
+                # grupo atual da tarefa 
+                'grupo_edit' : grupo_edit ,
+                # outros grupos 
+                'valores_grupos_editar':valores_grupos_editar,
+               
+            }
+            return render(request,'editar_tarefa.html',contexto)
+
+        """         
         elif date_start_ja_passou == True and date_completion_ja_passou == True:
             messages.error(request, 'data de conclusao e início inválidas: o dia ou a hora do dia já passou')
             return render(request,'form_tarefas.html',contexto)
@@ -259,6 +286,7 @@ def atualizar_tarefa(request):
         elif date_completion_ja_passou == True:
             messages.error(request, 'data de conclusao inválida: o dia ou a hora do dia já passou')
             return render(request,'form_tarefas.html',contexto)
+        """
         
 
     else:
@@ -316,6 +344,10 @@ def buscar_tarefa(request):
         else:
             return redirect('dashboard')
 
+# método que usei para a documentação do meu tcc, porém no arquivo de forms.py do app tarefas, nas linhas 18 e 19  estão essa validação
+
+# mas tive que fazer o código abaixo para acertar com a documentação proposta pelo tcc 
+""" 
 def  data_ja_passou(data):
     '''
      verifica se a data informada já passou e retorna true ou false 
@@ -334,6 +366,7 @@ def  data_ja_passou(data):
 
     else:
         return False
+"""
 
 
 

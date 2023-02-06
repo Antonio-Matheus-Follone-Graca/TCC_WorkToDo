@@ -15,8 +15,8 @@ class  FormTarefas(forms.ModelForm):
         # chamando as funcoes#
         data_inicio_maior_que_data_conclusao(date_start,date_completion,lista_de_erros)
         # coloquei na views de tarefas, no metodo data_ja_passou para automacao do tcc
-        #data_menor_data_atual(date_start,'date_start',lista_de_erros)
-        #data_menor_data_atual(date_completion,'date_completion',lista_de_erros)
+        data_menor_data_atual(date_start,'date_start',lista_de_erros)
+        data_menor_data_atual(date_completion,'date_completion',lista_de_erros)
         # se a lista de erros estiver com um valor, então há um erro nela
         if lista_de_erros is not None:
         # looping de cada erro
