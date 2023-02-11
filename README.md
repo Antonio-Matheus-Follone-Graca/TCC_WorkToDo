@@ -22,5 +22,5 @@ O link original está aqui **<https://github.com/This-Is-NPC/WorkToDo>**
 5. Crie um banco no pgadmin de nome tcc(ou caso queira mudar o banco de dados usado ou o nome do banco, vá respectivamente na pasta tcc do projeto em arquivos e abra o arquivo settings.py, linhas 86 e 88;
 6. Digite a senha do seu banco de dados e username do seu banco  no arquivo settings.py da pasta tcc respectivamente nas linhas 89 e 90; 
 7. Após isso ative a venv do projeto e rode python manage.py makemigrations e manage.py migrate; 
-8. Com a venv ativada, digite no cmd e python manage.py runserver
+8. Com a venv ativada, digite no cmd: python manage.py runserver
 
